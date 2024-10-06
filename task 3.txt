@@ -1,0 +1,102 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Itinerary {
+    private List<Destination> destinations;
+
+    public Itinerary() {
+        this.destinations = new ArrayList<>();
+    }
+
+    public void addDestination(Destination destination) {
+        destinations.add(destination);
+    }
+
+    public void displayItinerary() {
+        System.out.println("\nYour Travel Itinerary:");
+        for (Destination destination : destinations) {
+            System.out.println(destination);
+            System.out.println();
+        }
+        double totalBudget = calculateTotalBudget();
+        System.out.printf("Total Budget: $%.2f%n", totalBudget);
+    }
+
+    private double calculateTotalBudget() {
+        double total = 0;
+        for (Destination destination : destinations) {
+            total += destination.getBudget();
+        }
+        return total;
+    }
+}
+
+class Destination {
+    private String name;
+    private String date;
+    private String preferences;
+    private double budget;
+
+    public Destination(String name, String date, String preferences, double budget) {
+        this.name = name;
+        this.date = date;
+        this.preferences = preferences;
+        this.budget = budget;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    @Override
+    public String toString() {
+        return "Destination: " + name +
+               "\nDate: " + date +
+               "\nPreferences: " + preferences +
+               "\nBudget: $" + budget;
+    }
+}
+
+public class TravelItineraryPlanner {
+    private Itinerary itinerary;
+    private Scanner scanner;
+
+    public TravelItineraryPlanner() {
+        this.itinerary = new Itinerary();
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void run() {
+        System.out.println("Welcome to the Travel Itinerary Planner!");
+
+        while (true) {
+            System.out.print("Enter destination (or type 'done' to finish): ");
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            String date = getInput("Enter date (e.g., YYYY-MM-DD): ");
+            String preferences = getInput("Enter preferences (e.g., beaches, hiking): ");
+            double budget = Double.parseDouble(getInput("Enter budget for this destination: "));
+
+            itinerary.addDestination(new Destination(input, date, preferences, budget));
+            System.out.println("Destination added!\n");
+        }
+
+        itinerary.displayItinerary();
+        scanner.close();
+    }
+
+    private String getInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
+    public static void main(String[] args) {
+        TravelItineraryPlanner planner = new TravelItineraryPlanner();
+        planner.run();
+    }
+}
